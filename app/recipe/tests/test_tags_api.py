@@ -14,13 +14,13 @@ TAGS_URL = reverse('recipe:tag-list')
 
 
 class PublicTagsApiTests(TestCase):
-    """Test the publicly available tags API"""
+    """Test thje publicly available tags API"""
 
     def setUp(self):
         self.client = APIClient()
 
     def test_login_required(self):
-        """Test that login required for retrieving tags"""
+        """Test that login is required for retrieving tags"""
         res = self.client.get(TAGS_URL)
 
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -32,7 +32,7 @@ class PrivateTagsApiTests(TestCase):
     def setUp(self):
         self.user = get_user_model().objects.create_user(
             'test@londonappdev.com',
-            'password'
+            'password123'
         )
         self.client = APIClient()
         self.client.force_authenticate(self.user)
@@ -50,7 +50,7 @@ class PrivateTagsApiTests(TestCase):
         self.assertEqual(res.data, serializer.data)
 
     def test_tags_limited_to_user(self):
-        """Test that tags returned are for authenticated user"""
+        """Test that tags returned are for the authenticated user"""
         user2 = get_user_model().objects.create_user(
             'other@londonappdev.com',
             'testpass'
@@ -66,7 +66,7 @@ class PrivateTagsApiTests(TestCase):
 
     def test_create_tag_successful(self):
         """Test creating a new tag"""
-        payload = {'name': 'Simple'}
+        payload = {'name': 'Test tag'}
         self.client.post(TAGS_URL, payload)
 
         exists = Tag.objects.filter(
@@ -90,7 +90,7 @@ class PrivateTagsApiTests(TestCase):
             title='Coriander eggs on toast',
             time_minutes=10,
             price=5.00,
-            user=self.user,
+            user=self.user
         )
         recipe.tags.add(tag1)
 
@@ -104,6 +104,7 @@ class PrivateTagsApiTests(TestCase):
     def test_retrieve_tags_assigned_unique(self):
         """Test filtering tags by assigned returns unique items"""
         tag = Tag.objects.create(user=self.user, name='Breakfast')
+        Tag.objects.create(user=self.user, name='Lunch')
         recipe1 = Recipe.objects.create(
             title='Pancakes',
             time_minutes=5,
