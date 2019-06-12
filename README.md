@@ -1,5 +1,17 @@
 # recipe-app-API
 
+Please install Python 3.6 or above after that create and set up the virtual environment or install directly the dependencies available in the requirements.txt file using below command.
+# to create a Virtual environment named recipe on windows.
+Open the CMD and run the below comand
+python3 -m venv recipe
+
+# to set up the virtual env on windows.
+Open the CMD and run the below comand
+recipe\Scripts\activate
+
+pip install -r requirements.txt
+
+# docker commands
 docker-compose run app sh -c "python manage.py test"
 
 # API endpoints
